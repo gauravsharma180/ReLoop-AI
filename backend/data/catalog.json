@@ -1,0 +1,18 @@
+{
+  "categories": {
+    "electronics": { "basePriceInr": 3999, "baseCredits": 80, "co2KgIfSaved": 4.2 },
+    "footwear":    { "basePriceInr": 2499, "baseCredits": 50, "co2KgIfSaved": 3.1 },
+    "apparel":     { "basePriceInr": 1499, "baseCredits": 40, "co2KgIfSaved": 2.4 },
+    "home":        { "basePriceInr": 1999, "baseCredits": 45, "co2KgIfSaved": 5.0 },
+    "default":     { "basePriceInr": 1799, "baseCredits": 40, "co2KgIfSaved": 2.0 }
+  },
+  "refurbished": [
+    { "name": "Certified Refurb Wireless Earbuds", "category": "electronics", "priceInr": 1499 },
+    { "name": "Certified Refurb Bluetooth Speaker", "category": "electronics", "priceInr": 1999 },
+    { "name": "Renewed Running Shoes",             "category": "footwear",    "priceInr": 1299 },
+    { "name": "Renewed Canvas Sneakers",           "category": "footwear",    "priceInr": 999 },
+    { "name": "Pre-loved Denim Jacket",            "category": "apparel",     "priceInr": 799 },
+    { "name": "Renewed Cotton Hoodie",             "category": "apparel",     "priceInr": 699 },
+    { "name": "Refurb Ceramic Cookware Set",       "category": "home",        "priceInr": 1199 }
+  ]
+}

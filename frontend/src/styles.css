@@ -1,0 +1,142 @@
+:root{
+  --ink:#0F1111; --paper:#EAEDED; --canvas:#FFFFFF; --hairline:#D5D9D9;
+  --muted:#565959; --living:#16A34A; --living-soft:#E7F4EC;
+  --gA:#16A34A; --gB:#D97706; --gC:#EA580C; --gD:#DC2626; --gI:#6B7280;
+  --exchange:#2563EB; --exchange-soft:#EAF2FE;
+  --amazon-navy:#131921; --amazon-orange:#FF9900; --amazon-orange-dark:#E88A00;
+  --amazon-orange-soft:#FFF3E0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:40px 20px 80px}
+
+/* Masthead — Amazon-style dark navy bar with orange accent */
+.mast{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:18px 22px;border-radius:14px;margin-bottom:28px;
+  background:var(--amazon-navy);border-bottom:3px solid var(--amazon-orange)}
+.brand{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;color:#fff;
+  font-size:26px;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+.loop{width:22px;height:22px;color:var(--amazon-orange);flex:none}
+.tag{color:#CCD1D5;font-size:13px;max-width:300px;text-align:right;line-height:1.4}
+
+/* Uploader */
+.drop{border:1.5px dashed var(--hairline);border-radius:16px;background:var(--canvas);
+  padding:38px 24px;text-align:center;transition:border-color .15s,background .15s}
+.drop:hover{border-color:var(--living);background:#fff}
+.drop h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
+  font-size:19px;margin:14px 0 6px;letter-spacing:-.01em}
+.drop p{color:var(--muted);font-size:14px;margin:0 0 18px}
+.btn{display:inline-block;background:var(--amazon-orange);color:#0F1111;border:none;cursor:pointer;
+  font-family:"Inter";font-weight:700;font-size:14px;padding:11px 22px;border-radius:10px}
+.btn:hover{background:var(--amazon-orange-dark)}
+.preview{max-height:200px;border-radius:12px;margin-bottom:16px;object-fit:contain}
+.err{color:var(--gD);font-size:14px;margin-top:14px}
+
+/* Tabs */
+.tabs{display:flex;gap:8px;margin-bottom:24px}
+.tab{font-family:"Inter";font-weight:600;font-size:13px;color:var(--muted);
+  background:var(--canvas);border:1px solid var(--hairline);border-radius:10px;
+  padding:9px 16px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-color:var(--amazon-orange);background:var(--amazon-orange-soft)}
+
+/* Checkout form */
+.form-card{background:var(--canvas);border:1px solid var(--hairline);border-radius:18px;
+  padding:22px 24px;box-shadow:0 1px 0 rgba(20,32,30,.03)}
+.form-card h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
+  font-size:19px;margin:0 0 16px;letter-spacing:-.01em}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
+.field select,.field input[type=number],.field input[type=text]{width:100%;font-family:"Inter";font-size:14px;
+  padding:10px 12px;border:1px solid var(--hairline);border-radius:10px;
+  background:var(--paper);color:var(--ink)}
+.field select:focus,.field input:focus{outline:none;border-color:var(--living)}
+.field.checkbox label{display:flex;align-items:center;gap:8px;color:var(--ink);
+  font-size:14px;margin-bottom:0}
+.field.checkbox input{width:auto}
+
+/* Spinner */
+.scan{display:flex;align-items:center;gap:12px;justify-content:center;
+  color:var(--muted);font-size:14px;padding:30px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--living);
+  animation:pulse 1s infinite ease-in-out}
+@keyframes pulse{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+/* Result card — the signature */
+.card{background:var(--canvas);border:1px solid var(--hairline);border-radius:18px;
+  overflow:hidden;margin-top:26px;box-shadow:0 1px 0 rgba(20,32,30,.03)}
+.card-warn{border-color:#F6D9A8}
+.card-warn .item-name{color:#92400E}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;
+  gap:16px;padding:22px 24px 18px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--living);margin-bottom:5px}
+.card-warn .eyebrow{color:#B45309}
+.product-match{font-weight:700;font-size:13px;color:var(--amazon-orange-dark);margin-bottom:2px}
+.item-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
+  font-size:20px;letter-spacing:-.01em;margin:0}
+.item-sub{color:var(--muted);font-size:13px;margin-top:3px}
+.grade{flex:none;width:54px;height:54px;border-radius:14px;display:grid;
+  place-items:center;color:#fff;font-family:"Bricolage Grotesque";font-weight:800;
+  font-size:28px;line-height:1}
+.grade small{display:block;font-size:9px;font-weight:600;letter-spacing:.08em;opacity:.9}
+
+/* Decision hero */
+.decision{display:flex;align-items:center;gap:14px;padding:18px 24px;
+  background:var(--living-soft);border-top:1px solid var(--hairline);
+  border-bottom:1px solid var(--hairline)}
+.decision .ring{width:40px;height:40px;flex:none;color:var(--living)}
+.decision .verb{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+  font-size:24px;letter-spacing:-.01em;line-height:1}
+.decision .why{color:var(--ink);opacity:.7;font-size:13px;margin-top:3px}
+.decision.decision-exchange{background:var(--exchange-soft)}
+.decision-exchange .ring{color:var(--exchange)}
+.decision-exchange .verb{color:var(--exchange)}
+
+.body{padding:20px 24px 8px}
+.row{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 0;border-bottom:1px solid var(--hairline)}
+.row:last-child{border-bottom:none}
+.row .k{color:var(--muted);font-size:13px}
+.meter{flex:1;height:7px;background:var(--hairline);border-radius:4px;
+  margin:0 14px;overflow:hidden;max-width:240px}
+.meter span{display:block;height:100%;background:var(--living);border-radius:4px}
+.val{font-weight:600;font-size:14px;font-variant-numeric:tabular-nums}
+.price .old{color:var(--muted);text-decoration:line-through;margin-right:8px;font-weight:400}
+.price .new{color:var(--living);font-weight:700}
+
+.flags{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 4px}
+.chip{font-size:12px;color:var(--ink);background:#F1F0EA;border:1px solid var(--hairline);
+  padding:4px 10px;border-radius:20px}
+.warn{display:flex;gap:9px;align-items:flex-start;background:#FEF3E2;
+  border:1px solid #F6D9A8;color:#92400E;font-size:13px;border-radius:11px;
+  padding:11px 13px;margin:14px 0 4px}
+
+.eco{display:flex;gap:14px;margin:16px 0 4px}
+.eco .stat{flex:1;background:var(--living-soft);border-radius:13px;padding:14px 16px}
+.eco .num{font-family:"Bricolage Grotesque";font-weight:800;font-size:22px;
+  color:var(--living);line-height:1;font-variant-numeric:tabular-nums}
+.eco .lbl{color:var(--ink);opacity:.65;font-size:12px;margin-top:5px}
+
+.recs{padding:4px 24px 22px}
+.recs h4{font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);margin:14px 0 10px}
+.rec{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 13px;border:1px solid var(--hairline);border-radius:11px;
+  margin-bottom:8px;font-size:14px}
+.rec .rp{font-weight:600}
+
+.src{font-size:11px;color:var(--muted);padding:0 24px 18px}
+
+/* Impact strip */
+.impact{display:flex;gap:12px;margin-top:24px}
+.impact .cell{flex:1;background:var(--canvas);border:1px solid var(--hairline);
+  border-radius:13px;padding:14px 16px}
+.impact .n{font-family:"Bricolage Grotesque";font-weight:800;font-size:20px;
+  font-variant-numeric:tabular-nums}
+.impact .l{color:var(--muted);font-size:12px;margin-top:4px}
+
+@media(max-width:560px){.eco,.impact{flex-direction:column}.tag{display:none}}
+@media(prefers-reduced-motion:reduce){.dot{animation:none}}
