@@ -1,4 +1,4 @@
-# SecondLife Commerce
+# ReLoop-AI 
 
 AI-powered returns intake. Upload a photo of a returned item; the system grades
 its condition and routes it to its **next best life** — Resell, Refurbish, Exchange,
@@ -18,8 +18,8 @@ not hallucinated. That answers the "can you trust the grade?" question directly.
 ```bash
 cd backend
 npm install
-cp .env.example .env      # optional: add AWS / Gemini keys for real vision
-npm start                 # http://localhost:5000
+cp .env.example .env    
+npm start             
 ```
 Without any keys it runs in **demo mode**: deterministic grading from the image bytes,
 so the demo works end-to-end and never depends on a live API.
@@ -28,7 +28,7 @@ so the demo works end-to-end and never depends on a live API.
 ```bash
 cd frontend
 npm install
-npm run dev               # http://localhost:5173
+npm run dev               
 ```
 
 ## What's inside
@@ -63,5 +63,4 @@ never changes regardless of which one is active:
 2. **Google Gemini** (`gemini-2.5-flash`) — used if `GEMINI_API_KEY` is set.
 3. **Deterministic mock** — derived from the image hash, no keys needed.
 
-## Next (for the 48h plan)
-- Pre-cache your 8 demo images for a bulletproof live run
+
