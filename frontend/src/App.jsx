@@ -1,9 +1,13 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import UploadScreen from './components/UploadScreen';
 import CheckoutScreen from './components/CheckoutScreen';
+import NotificationBell from './components/NotificationBell';
+import { useAuth } from './context/AuthContext';
 
 export default function App() {
   const [tab, setTab] = useState('grade');
+  const { user, logout } = useAuth();
 
   return (
     <div className="wrap">
@@ -15,7 +19,14 @@ export default function App() {
           </svg>
           ReLoop-AI
         </div>
-        <div className="tag">Every returned item, routed to its most valuable next life — in seconds.</div>
+        <div className="mast-right">
+          <div className="tag">Every returned item, routed to its most valuable next life — in seconds.</div>
+          <div className="account">
+            {user && <NotificationBell />}
+            <span>{user?.email}</span>
+            <button className="logout-btn" type="button" onClick={logout}>Log out</button>
+          </div>
+        </div>
       </header>
 
       <nav className="tabs">
@@ -25,6 +36,9 @@ export default function App() {
         <button className={tab === 'risk' ? 'tab active' : 'tab'} onClick={() => setTab('risk')}>
           Predict return risk
         </button>
+        <Link className="tab" to="/history">History</Link>
+        <Link className="tab" to="/exchange">Exchange board</Link>
+        <Link className="tab" to="/settings">Settings</Link>
       </nav>
 
       {tab === 'grade' ? <UploadScreen /> : <CheckoutScreen />}

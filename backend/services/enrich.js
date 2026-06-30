@@ -6,8 +6,8 @@ const products = require('../data/products.json');
 // Mock warranty lookup — no real returns/warranty system yet, so every item
 // gets a category-appropriate placeholder for the Product Health Card.
 const WARRANTY_BY_CATEGORY = {
-  electronics: 'Warranty: 6 months remaining',
-  home: 'Warranty: 3 months remaining',
+  electronics: 'Warranty: 12 months remaining',
+  home: 'Warranty: 12 months remaining',
   footwear: 'No manufacturer warranty applicable',
   apparel: 'No manufacturer warranty applicable',
   default: 'No manufacturer warranty applicable'

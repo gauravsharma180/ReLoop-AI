@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import axios from 'axios';
 import ResultCard from './ResultCard';
 import ImpactCounter from './ImpactCounter';
+import { useAuth } from '../context/AuthContext';
 
 const API = 'http://localhost:5000';
 
@@ -12,6 +13,7 @@ export default function UploadScreen() {
   const [error, setError] = useState(null);
   const [tick, setTick] = useState(0);
   const fileRef = useRef();
+  const { token } = useAuth();
 
   const onFile = async (e) => {
     const file = e.target.files?.[0];
@@ -22,7 +24,9 @@ export default function UploadScreen() {
     try {
       const data = new FormData();
       data.append('image', file);
-      const res = await axios.post(`${API}/grade`, data);
+      const res = await axios.post(`${API}/grade`, data, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setResult(res.data);
       setTick((t) => t + 1);
     } catch (err) {

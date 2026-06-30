@@ -7,3 +7,6 @@ frontend/.env
 dist/
 build/
 .DS_Store
+backend/reloop.db
+backend/reloop.db-shm
+backend/reloop.db-wal

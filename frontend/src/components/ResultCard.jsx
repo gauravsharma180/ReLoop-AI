@@ -1,3 +1,8 @@
+import { useState } from 'react';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+
+const API = 'http://localhost:5000';
 const GRADE_COLOR = { A: 'var(--gA)', B: 'var(--gB)', C: 'var(--gC)', D: 'var(--gD)', INSPECT: 'var(--gI)' };
 const inr = (n) => '₹' + Number(n).toLocaleString('en-IN');
 
@@ -7,6 +12,57 @@ function LoopIcon() {
       strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 12a9 9 0 1 1-3-6.7" /><path d="M21 4v5h-5" />
     </svg>
+  );
+}
+
+function ListForExchange({ r }) {
+  const { token } = useAuth();
+  const [state, setState] = useState('idle'); // 'idle' | 'listing' | 'listed' | 'error'
+  const [message, setMessage] = useState(null);
+
+  const isRecommended = r.decision === 'EXCHANGE';
+
+  async function listForExchange() {
+    setState('listing');
+    try {
+      await axios.post(
+        `${API}/exchange/list`,
+        { gradeId: r.gradeId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setState('listed');
+      setMessage(`Listed! Nearby users interested in ${r.category} will be notified.`);
+    } catch (err) {
+      setState('error');
+      const errMsg = err.response?.data?.error;
+      setMessage(
+        errMsg === 'This item is already listed for exchange'
+          ? 'This item is already listed for exchange.'
+          : errMsg || 'Could not list this item for exchange.'
+      );
+    }
+  }
+
+  if (state === 'listed') {
+    return <div className="list-exchange-row exchange-toast">{message}</div>;
+  }
+
+  return (
+    <div className="list-exchange-row">
+      <button
+        className={isRecommended ? 'btn list-exchange-btn' : 'btn-secondary list-exchange-btn'}
+        type="button"
+        disabled={state === 'listing'}
+        onClick={listForExchange}
+      >
+        {state === 'listing'
+          ? 'Listing…'
+          : isRecommended
+            ? 'List for P2P Exchange (Recommended)'
+            : 'List for P2P Exchange instead'}
+      </button>
+      {state === 'error' && <div className="exchange-toast exchange-toast-error">{message}</div>}
+    </div>
   );
 }
 
@@ -109,6 +165,8 @@ export default function ResultCard({ r }) {
           </div>
         </div>
       </div>
+
+      <ListForExchange r={r} />
 
       {r.recommendations?.length > 0 && (
         <div className="recs">

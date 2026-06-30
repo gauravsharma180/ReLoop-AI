@@ -15,14 +15,4 @@ function getCached(buffer) {
   return demoResponses[hashImage(buffer)] || null;
 }
 
-// Tiny in-memory tally so the ImpactCounter feels alive across uploads.
-const impact = { items: 0, inrSaved: 0, co2SavedKg: 0, greenCredits: 0 };
-function addImpact(r) {
-  impact.items += 1;
-  impact.inrSaved += r.resalePriceInr || 0;
-  impact.co2SavedKg += r.co2SavedKg || 0;
-  impact.greenCredits += r.greenCredits || 0;
-}
-function getImpact() { return impact; }
-
-module.exports = { hashImage, getCached, addImpact, getImpact };
+module.exports = { hashImage, getCached };
