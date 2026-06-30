@@ -14,10 +14,6 @@ The core design principle is a deliberate split between perception and decision.
 
 We also fold in two safety layers: a **return-fraud check** that flags items showing signs of prior use despite being returned as "new" and downgrades their routing accordingly, and an **input guardrail** that rejects non-product images (e.g. a photo of a hand) instead of inventing a fake grade and price. For video uploads, the system samples multiple frames, grades each independently, and takes the worst-case grade across all of them — so damage on one side of an item cannot hide from the system. A parallel **Predict Return Risk** feature scores an order's checkout signals (category, price, size selection, return history, review average) as HIGH / MEDIUM / LOW before the order ships, with a suggested nudge to prevent the return altogether.
 
-## Demo Video 🎥
-
-[Add demo video link here]
-
 ## Block Diagram
 
 **System Architecture**
