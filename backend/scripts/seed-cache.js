@@ -15,7 +15,7 @@ const path = require('path');
 const ai = require('../services/ai');
 const rules = require('../services/rules');
 const { enrich } = require('../services/enrich');
-const { hashImage } = require('../services/cache');
+const { hashImage } = require('../services/demoCache');
 
 const DATA_FILE = path.join(__dirname, '..', 'data', 'demoResponses.json');
 const MIME = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };

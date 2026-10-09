@@ -5,18 +5,20 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "seed-cache": "node scripts/seed-cache.js"
+    "seed-cache": "node scripts/seed-cache.js",
+    "setup-db": "node database/createDb.js"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1068.0",
     "@google/genai": "^2.8.0",
     "bcrypt": "^6.0.0",
-    "better-sqlite3": "^9.6.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-validator": "^7.3.2",
+    "ioredis": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.13.1"
   }
 }

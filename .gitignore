@@ -10,3 +10,7 @@ build/
 backend/reloop.db
 backend/reloop.db-shm
 backend/reloop.db-wal
+
+*.db
+*.db-shm
+*.db-wal

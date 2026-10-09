@@ -1,24 +1,20 @@
 const router = require('express').Router();
-const db = require('../database/db');
+const { query } = require('../database/db');
 const { verifyToken } = require('../middleware/auth');
-
-function withParsedFlaws(row) {
-  return { ...row, flaws: row.flaws ? JSON.parse(row.flaws) : [] };
-}
+const asyncHandler = require('../utils/asyncHandler');
 
 function pct(numerator, denominator) {
   return denominator === 0 ? 0 : Math.round((numerator / denominator) * 10000) / 100;
 }
 
 // NOTE: registered before GET /:id so "stats" isn't swallowed as an :id param.
-router.get('/stats', verifyToken, (req, res) => {
-  const rows = db
-    .prepare(`
-      SELECT grade, decision, fraud_flag, low_confidence_flag, feedback,
-             green_credits, co2_saved, estimated_value
-      FROM grades WHERE user_id = ?
-    `)
-    .all(req.user.userId);
+router.get('/stats', verifyToken, asyncHandler(async (req, res) => {
+  const { rows } = await query(
+    `SELECT grade, decision, fraud_flag, low_confidence_flag, feedback,
+            green_credits, co2_saved, estimated_value
+     FROM grades WHERE user_id = $1`,
+    [req.user.userId]
+  );
 
   const totalGraded = rows.length;
   const gradeDistribution = { A: 0, B: 0, C: 0, D: 0 };
@@ -56,15 +52,15 @@ router.get('/stats', verifyToken, (req, res) => {
     totalCo2Saved: Math.round(totalCo2Saved * 100) / 100,
     totalValueRecovered
   });
-});
+}));
 
-router.get('/:id', verifyToken, (req, res) => {
+router.get('/:id', verifyToken, asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id)) {
     return res.status(400).json({ error: 'Invalid grade id' });
   }
 
-  const grade = db.prepare('SELECT * FROM grades WHERE id = ?').get(id);
+  const grade = (await query('SELECT * FROM grades WHERE id = $1', [id])).rows[0];
   if (!grade) {
     return res.status(404).json({ error: 'Grade not found' });
   }
@@ -72,10 +68,10 @@ router.get('/:id', verifyToken, (req, res) => {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
-  res.json({ grade: withParsedFlaws(grade) });
-});
+  res.json({ grade });
+}));
 
-router.patch('/:id/feedback', verifyToken, (req, res) => {
+router.patch('/:id/feedback', verifyToken, asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id)) {
     return res.status(400).json({ error: 'Invalid grade id' });
@@ -86,7 +82,7 @@ router.patch('/:id/feedback', verifyToken, (req, res) => {
     return res.status(400).json({ error: "Feedback must be 'correct' or 'incorrect'" });
   }
 
-  const grade = db.prepare('SELECT id, user_id, feedback FROM grades WHERE id = ?').get(id);
+  const grade = (await query('SELECT id, user_id, feedback FROM grades WHERE id = $1', [id])).rows[0];
   if (!grade) {
     return res.status(404).json({ error: 'Grade not found' });
   }
@@ -97,18 +93,18 @@ router.patch('/:id/feedback', verifyToken, (req, res) => {
     return res.status(400).json({ error: 'Feedback already submitted' });
   }
 
-  db.prepare('UPDATE grades SET feedback = ? WHERE id = ?').run(feedback, id);
+  await query('UPDATE grades SET feedback = $1 WHERE id = $2', [feedback, id]);
 
   res.json({ message: 'Feedback saved', gradeId: id, feedback });
-});
+}));
 
-router.get('/', verifyToken, (req, res) => {
-  const grades = db
-    .prepare('SELECT * FROM grades WHERE user_id = ? ORDER BY created_at DESC')
-    .all(req.user.userId)
-    .map(withParsedFlaws);
+router.get('/', verifyToken, asyncHandler(async (req, res) => {
+  const { rows } = await query(
+    'SELECT * FROM grades WHERE user_id = $1 ORDER BY created_at DESC',
+    [req.user.userId]
+  );
 
-  res.json({ grades });
-});
+  res.json({ grades: rows });
+}));
 
 module.exports = router;

@@ -1,18 +1,23 @@
-// Demo-safety layer.
-// Hash the uploaded image bytes -> if it matches a pre-seeded demo image,
-// return the saved response instantly. A dead/absent AI API can never break
-// the live demo. Pre-seed ../data/demoResponses.json with your own demo image
-// hashes the night before judging — run `npm run seed-cache <image files...>`.
-const crypto = require('crypto');
+// Thin Redis read/write helpers. Every call is wrapped so a Redis outage
+// degrades to "no caching" instead of failing the request.
+const redis = require('../database/redis');
 
-const demoResponses = require('../data/demoResponses.json');
-
-function hashImage(buffer) {
-  return crypto.createHash('md5').update(buffer).digest('hex');
+async function getCached(key) {
+  try {
+    const raw = await redis.get(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    console.warn(`Cache read failed for "${key}": ${e.message}`);
+    return null;
+  }
 }
 
-function getCached(buffer) {
-  return demoResponses[hashImage(buffer)] || null;
+async function setCached(key, value, ttlSeconds) {
+  try {
+    await redis.set(key, JSON.stringify(value), 'EX', ttlSeconds);
+  } catch (e) {
+    console.warn(`Cache write failed for "${key}": ${e.message}`);
+  }
 }
 
-module.exports = { hashImage, getCached };
+module.exports = { getCached, setCached };

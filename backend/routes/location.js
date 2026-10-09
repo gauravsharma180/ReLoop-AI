@@ -1,8 +1,9 @@
 const router = require('express').Router();
-const db = require('../database/db');
+const { query } = require('../database/db');
 const { verifyToken } = require('../middleware/auth');
+const asyncHandler = require('../utils/asyncHandler');
 
-router.patch('/', verifyToken, (req, res) => {
+router.patch('/', verifyToken, asyncHandler(async (req, res) => {
   const latitude = Number(req.body.latitude);
   const longitude = Number(req.body.longitude);
 
@@ -10,10 +11,12 @@ router.patch('/', verifyToken, (req, res) => {
     return res.status(400).json({ error: 'latitude and longitude must be numbers' });
   }
 
-  db.prepare('UPDATE users SET latitude = ?, longitude = ? WHERE id = ?')
-    .run(latitude, longitude, req.user.userId);
+  await query(
+    'UPDATE users SET latitude = $1, longitude = $2 WHERE id = $3',
+    [latitude, longitude, req.user.userId]
+  );
 
   res.json({ message: 'Location updated' });
-});
+}));
 
 module.exports = router;

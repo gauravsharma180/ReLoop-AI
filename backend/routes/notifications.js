@@ -1,29 +1,31 @@
 const router = require('express').Router();
-const db = require('../database/db');
+const { query } = require('../database/db');
 const { verifyToken } = require('../middleware/auth');
+const asyncHandler = require('../utils/asyncHandler');
 
-router.get('/', verifyToken, (req, res) => {
-  const notifications = db
-    .prepare('SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC')
-    .all(req.user.userId);
+router.get('/', verifyToken, asyncHandler(async (req, res) => {
+  const { rows } = await query(
+    'SELECT * FROM notifications WHERE user_id = $1 ORDER BY created_at DESC',
+    [req.user.userId]
+  );
 
-  const unreadCount = notifications.filter((n) => n.is_read === 0).length;
+  const unreadCount = rows.filter((n) => !n.is_read).length;
 
-  res.json({ notifications, unreadCount });
-});
+  res.json({ notifications: rows, unreadCount });
+}));
 
-router.patch('/read-all', verifyToken, (req, res) => {
-  db.prepare('UPDATE notifications SET is_read = 1 WHERE user_id = ?').run(req.user.userId);
+router.patch('/read-all', verifyToken, asyncHandler(async (req, res) => {
+  await query('UPDATE notifications SET is_read = true WHERE user_id = $1', [req.user.userId]);
   res.json({ message: 'All marked as read' });
-});
+}));
 
-router.patch('/:id/read', verifyToken, (req, res) => {
+router.patch('/:id/read', verifyToken, asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id)) {
     return res.status(400).json({ error: 'Invalid notification id' });
   }
 
-  const notification = db.prepare('SELECT * FROM notifications WHERE id = ?').get(id);
+  const notification = (await query('SELECT * FROM notifications WHERE id = $1', [id])).rows[0];
   if (!notification) {
     return res.status(404).json({ error: 'Notification not found' });
   }
@@ -31,8 +33,8 @@ router.patch('/:id/read', verifyToken, (req, res) => {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
-  db.prepare('UPDATE notifications SET is_read = 1 WHERE id = ?').run(id);
+  await query('UPDATE notifications SET is_read = true WHERE id = $1', [id]);
   res.json({ message: 'Marked as read' });
-});
+}));
 
 module.exports = router;
