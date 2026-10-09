@@ -5,6 +5,9 @@ import App from './App.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import HistoryPage from './pages/HistoryPage.jsx';
+import ReviewQueuePage from './pages/ReviewQueuePage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
+import AdminDashboardPage from './pages/AdminDashboardPage.jsx';
 import ExchangePage from './pages/ExchangePage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -30,6 +33,30 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           element={
             <ProtectedRoute>
               <HistoryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/review"
+          element={
+            <ProtectedRoute>
+              <ReviewQueuePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requireRole="admin">
+              <AdminDashboardPage />
             </ProtectedRoute>
           }
         />

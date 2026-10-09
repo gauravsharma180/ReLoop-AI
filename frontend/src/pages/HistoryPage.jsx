@@ -9,10 +9,10 @@ const API = 'http://localhost:5000';
 // should look identical whether you're grading or browsing history.
 const GRADE_COLOR = { A: 'var(--gA)', B: 'var(--gB)', C: 'var(--gC)', D: 'var(--gD)' };
 
-function formatDate(sqliteDatetime) {
-  // SQLite's datetime('now') returns "YYYY-MM-DD HH:MM:SS" in UTC with no
-  // offset marker — without the explicit "Z" some browsers parse it as local time.
-  const d = new Date(sqliteDatetime.replace(' ', 'T') + 'Z');
+function formatDate(isoDatetime) {
+  // Postgres TIMESTAMPTZ columns arrive as JSON already in full ISO 8601
+  // (e.g. "2026-09-18T09:47:39.000Z") — no reformatting needed.
+  const d = new Date(isoDatetime);
   return d.toLocaleString('en-IN', {
     day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
   });
@@ -113,13 +113,13 @@ export default function HistoryPage() {
                 <span className="val">{g.confidence}%</span>
               </div>
 
-              {g.fraud_flag === 1 && (
+              {g.fraud_flag && (
                 <div className="warn">
                   <span>⚠</span>
                   <span>Return-fraud signal flagged on this item.</span>
                 </div>
               )}
-              {g.low_confidence_flag === 1 && (
+              {g.low_confidence_flag && (
                 <div className="warn">
                   <span>⚠</span>
                   <span>Low confidence grading — may need manual review.</span>

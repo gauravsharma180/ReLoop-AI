@@ -94,8 +94,9 @@ export default function ResultCard({ r }) {
 
   const gradeColor = GRADE_COLOR[r.conditionGrade] || 'var(--gI)';
   const isExchange = r.decision === 'EXCHANGE';
+  const needsReview = r.decision === 'NEEDS_REVIEW';
   return (
-    <div className="card">
+    <div className={needsReview ? 'card card-warn' : 'card'}>
       <div className="card-top">
         <div>
           <div className="eyebrow">Product Health Card</div>
@@ -110,13 +111,23 @@ export default function ResultCard({ r }) {
         </div>
       </div>
 
-      <div className={isExchange ? 'decision decision-exchange' : 'decision'}>
-        <LoopIcon />
-        <div>
-          <div className="verb">{r.decision}</div>
-          <div className="why">{r.decisionReason}</div>
+      {needsReview ? (
+        <div className="decision decision-review">
+          <span className="decision-review-icon">⚠</span>
+          <div>
+            <div className="verb">Needs review</div>
+            <div className="why">Low confidence — flagged for manual review</div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className={isExchange ? 'decision decision-exchange' : 'decision'}>
+          <LoopIcon />
+          <div>
+            <div className="verb">{r.decision}</div>
+            <div className="why">{r.decisionReason}</div>
+          </div>
+        </div>
+      )}
 
       <div className="body">
         <div className="row">

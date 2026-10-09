@@ -28,10 +28,10 @@ function StatusBadge({ status }) {
   return <span className="status-badge status-expired">{status}</span>;
 }
 
-function formatDate(sqliteDatetime) {
-  // SQLite's datetime('now') returns "YYYY-MM-DD HH:MM:SS" in UTC with no
-  // offset marker — without the explicit "Z" some browsers parse it as local time.
-  const d = new Date(sqliteDatetime.replace(' ', 'T') + 'Z');
+function formatDate(isoDatetime) {
+  // Postgres TIMESTAMPTZ columns arrive as JSON already in full ISO 8601
+  // (e.g. "2026-09-18T09:47:39.000Z") — no reformatting needed.
+  const d = new Date(isoDatetime);
   return d.toLocaleString('en-IN', {
     day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
   });

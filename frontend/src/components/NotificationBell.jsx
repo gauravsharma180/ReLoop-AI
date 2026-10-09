@@ -6,8 +6,9 @@ import { useAuth } from '../context/AuthContext';
 const API = 'http://localhost:5000';
 const POLL_MS = 30000;
 
-function relativeTime(sqliteDatetime) {
-  const then = new Date(sqliteDatetime.replace(' ', 'T') + 'Z').getTime();
+function relativeTime(isoDatetime) {
+  // Postgres TIMESTAMPTZ columns arrive as JSON already in full ISO 8601.
+  const then = new Date(isoDatetime).getTime();
   const diffSec = Math.max(0, Math.floor((Date.now() - then) / 1000));
 
   if (diffSec < 60) return 'just now';
@@ -58,7 +59,7 @@ export default function NotificationBell() {
     setOpen(false);
     try {
       await axios.patch(`${API}/notifications/${n.id}/read`, {}, authHeaders);
-      setNotifications((prev) => prev.map((x) => (x.id === n.id ? { ...x, is_read: 1 } : x)));
+      setNotifications((prev) => prev.map((x) => (x.id === n.id ? { ...x, is_read: true } : x)));
       if (!n.is_read) setUnreadCount((c) => Math.max(0, c - 1));
     } catch {
       // Navigate regardless — failing to mark as read shouldn't block it.
@@ -69,7 +70,7 @@ export default function NotificationBell() {
   async function markAllRead() {
     try {
       await axios.patch(`${API}/notifications/read-all`, {}, authHeaders);
-      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: 1 })));
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
       setUnreadCount(0);
     } catch {
       // ignore — next poll will resync state

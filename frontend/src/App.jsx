@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import UploadScreen from './components/UploadScreen';
 import CheckoutScreen from './components/CheckoutScreen';
 import NotificationBell from './components/NotificationBell';
+import ReviewBadge from './components/ReviewBadge';
 import { useAuth } from './context/AuthContext';
 
 export default function App() {
@@ -36,9 +37,12 @@ export default function App() {
         <button className={tab === 'risk' ? 'tab active' : 'tab'} onClick={() => setTab('risk')}>
           Predict return risk
         </button>
+        <Link className="tab" to="/dashboard">Dashboard</Link>
+        <ReviewBadge />
         <Link className="tab" to="/history">History</Link>
         <Link className="tab" to="/exchange">Exchange board</Link>
         <Link className="tab" to="/settings">Settings</Link>
+        {user?.role === 'admin' && <Link className="tab" to="/admin">Admin</Link>}
       </nav>
 
       {tab === 'grade' ? <UploadScreen /> : <CheckoutScreen />}
