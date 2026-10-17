@@ -129,12 +129,18 @@ router.post('/:id/claim', verifyToken, asyncHandler(async (req, res) => {
     return res.status(400).json({ error: 'Cannot claim your own listing' });
   }
 
-  await query(
+  // The status check above is only a fast path for a clear error message;
+  // two requests can both pass it. The `status = 'available'` guard here is
+  // what makes the claim atomic — only one UPDATE can match the row.
+  const { rowCount } = await query(
     `UPDATE exchange_listings
      SET status = 'claimed', claimed_by_user_id = $1, claimed_at = NOW()
-     WHERE id = $2`,
+     WHERE id = $2 AND status = 'available'`,
     [req.user.userId, id]
   );
+  if (rowCount === 0) {
+    return res.status(409).json({ error: 'No longer available' });
+  }
 
   res.json({ message: 'Item claimed successfully' });
 }));
